@@ -1,15 +1,80 @@
 # Council Report Output Format
 
-Use this exact structure for the final council report. Every section is required.
+Choose the format based on council size.
 
 ---
+
+## Quick Format (2 perspectives)
+
+Use this compact format for `--quick` councils.
+
+```markdown
+## Council Report: [Concise Title]
+
+**Question:** [Original question, verbatim]
+**Council:** [2 perspective names]
+**Mode:** [Quick / Quick Deep]
+
+---
+
+### Verdict
+
+[1-3 sentence bottom-line recommendation.]
+
+---
+
+### Analysis
+
+**Agreement:**
+[What both perspectives agree on]
+
+**Disagreement:**
+[Where they diverge, with each side's reasoning]
+
+---
+
+### Blind Spots
+
+- [What neither perspective addressed]
+
+---
+
+### Recommended Next Steps
+
+1. [Action 1]
+2. [Action 2]
+
+---
+
+### Individual Perspectives
+
+<details>
+<summary>[Perspective 1]'s Analysis</summary>
+
+[Full analysis]
+
+</details>
+
+<details>
+<summary>[Perspective 2]'s Analysis</summary>
+
+[Full analysis]
+
+</details>
+```
+
+---
+
+## Standard Format (3-6 perspectives)
+
+Use this full format for default, `--full`, and custom council sizes.
 
 ```markdown
 ## Council Report: [Concise Title Derived from the Question]
 
 **Question:** [The user's original question, verbatim]
-**Council:** [Names of the 4 perspectives selected]
-**Mode:** [Default / Deep]
+**Council ([N] perspectives):** [Names of all selected perspectives]
+**Mode:** [Default / Deep / Full / Full Deep]
 
 ---
 
@@ -21,7 +86,7 @@ Use this exact structure for the final council report. Every section is required
 
 ### Consensus Points
 
-[Findings where 3+ perspectives agreed. Bulleted list. These are the safest bets.]
+[Findings where a strong majority of perspectives agreed. Bulleted list. These are the safest bets.]
 
 - [Point 1]
 - [Point 2]
@@ -31,14 +96,14 @@ Use this exact structure for the final council report. Every section is required
 
 ### Key Tensions
 
-[For each meaningful disagreement between perspectives:]
+[For each meaningful disagreement between perspectives — limit to 2-3 most significant:]
 
 **Tension: [Value A] vs. [Value B]**
 - **[Perspective 1]** argues: [their position and reasoning]
 - **[Perspective 2]** counters: [their position and reasoning]
 - **Resolution:** [Synthesized recommendation, or "Genuine trade-off — choose based on whether you prioritize [X] or [Y]"]
 
-[Repeat for each tension. Usually 1-3 tensions.]
+[Repeat for each significant tension.]
 
 ---
 
@@ -55,7 +120,7 @@ Use this exact structure for the final council report. Every section is required
 
 | Aspect | Confidence | Signal |
 |--------|-----------|--------|
-| [Aspect 1] | High / Medium / Low | [Why — e.g., "All perspectives agree" or "Divergent views"] |
+| [Aspect 1] | High / Medium / Low | [Why — e.g., "Strong majority agrees" or "Divergent views"] |
 | [Aspect 2] | High / Medium / Low | [Why] |
 | [Aspect 3] | High / Medium / Low | [Why] |
 
@@ -79,26 +144,7 @@ Use this exact structure for the final council report. Every section is required
 
 </details>
 
-<details>
-<summary>[Perspective 2]'s Analysis</summary>
-
-[Full analysis]
-
-</details>
-
-<details>
-<summary>[Perspective 3]'s Analysis</summary>
-
-[Full analysis]
-
-</details>
-
-<details>
-<summary>[Perspective 4]'s Analysis</summary>
-
-[Full analysis]
-
-</details>
+[Repeat <details> block for each perspective in the council]
 ```
 
 ---
@@ -112,3 +158,4 @@ Use this exact structure for the final council report. Every section is required
 - Keep Consensus Points to 3-5 bullets max
 - Keep Blind Spots to 2-4 items (quality over quantity)
 - Next Steps should be concrete enough to act on immediately
+- At 5-6 perspectives, do not list every individual disagreement — surface only structurally significant tensions

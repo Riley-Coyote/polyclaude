@@ -1,45 +1,77 @@
 ---
 description: Analyze a question, plan, or idea from multiple cognitive perspectives simultaneously
-argument-hint: [--deep] <question, plan, or idea to analyze>
+argument-hint: [--quick|--full] [--deep] [--include name,name] [--exclude name,name] <question>
 ---
 
 # PolyClaude Council
 
-You are orchestrating a multi-perspective council analysis. Your job is to classify the question, select perspectives, spawn parallel agents, and synthesize results into a Council Report.
+You are orchestrating a multi-perspective council analysis. Your job is to parse flags, classify the question, select perspectives, spawn parallel agents, and synthesize results into a Council Report.
 
 ## Step 1: Parse Input
 
-The user's input is in `$ARGUMENTS`. Check for the `--deep` flag:
-- If `$ARGUMENTS` starts with `--deep`: set mode to DEEP (agents use `model: opus`), remove `--deep` from the question
-- Otherwise: set mode to DEFAULT (agents use `model: sonnet`)
+The user's input is in `$ARGUMENTS`. Parse the following flags (order-independent, remove each from the question after parsing):
 
-If `$ARGUMENTS` is empty or missing, ask the user what they'd like the council to analyze.
+**Council size (mutually exclusive):**
+- `--quick` → 2 perspectives (User Advocate + 1 adaptive)
+- *(no flag)* → 4 perspectives (User Advocate + 3 adaptive) — the default
+- `--full` → all 6 built-in perspectives
+- `--council N` → exactly N perspectives, where N is 2-6 (power user override)
 
-## Step 2: Classify the Question
+**Quality:**
+- `--deep` → agents use `model: opus` instead of `model: sonnet`
+
+**Perspective overrides:**
+- `--include name,name` → force-include these perspectives regardless of classification (e.g., `--include temporal,innovator`)
+- `--exclude name,name` → force-exclude these perspectives from the council (e.g., `--exclude pragmatist`)
+
+Perspective names are lowercase: `architect`, `skeptic`, `pragmatist`, `innovator`, `advocate`, `temporal`
+
+**Flag combinations are valid:** `--full --deep`, `--quick --include skeptic`, `--exclude architect --deep`, etc.
+
+If `$ARGUMENTS` is empty or contains only flags with no question, ask the user what they'd like the council to analyze.
+
+## Step 2: Determine Council Composition
 
 Read the classification rules:
 @${CLAUDE_PLUGIN_ROOT}/skills/council/references/classification.md
 
-Classify the user's question and determine which 4 perspectives to use. The User Advocate is always included; select 3 more based on question type.
+**Resolution order:**
+1. Classify the question to get the default perspective set for the determined council size
+2. Apply `--include` overrides (add perspectives, may increase council size up to 6)
+3. Apply `--exclude` overrides (remove perspectives)
+4. User Advocate remains unless explicitly excluded via `--exclude advocate`
+5. Final council size must be 2-6 perspectives
 
-Announce the council selection to the user:
+## Step 3: Announce and Estimate Cost
+
+Announce the council selection and estimated cost to the user:
 
 ```
 Convening the PolyClaude Council...
 
 Question type: [classification]
-Council: User Advocate + [Perspective 2] + [Perspective 3] + [Perspective 4]
-Mode: [Default (sonnet agents) / Deep (opus agents)]
+Council ([N] perspectives): [Perspective 1] + [Perspective 2] + ...
+Mode: [Default (sonnet) / Deep (opus)]
+Estimated cost: ~$[X.XX]
 ```
 
-## Step 3: Load Perspectives
+**Cost estimation table:**
+| Perspectives | Sonnet (default) | Opus (--deep) |
+|---|---|---|
+| 2 (--quick) | ~$0.15 | ~$0.75 |
+| 3 | ~$0.22 | ~$1.10 |
+| 4 (default) | ~$0.30 | ~$1.50 |
+| 5 | ~$0.37 | ~$1.85 |
+| 6 (--full) | ~$0.45 | ~$2.25 |
 
-Read the perspective definitions for the 4 selected perspectives:
+## Step 4: Load Perspectives
+
+Read the perspective definitions for the selected perspectives:
 @${CLAUDE_PLUGIN_ROOT}/skills/council/references/perspectives.md
 
-## Step 4: Spawn Parallel Agents
+## Step 5: Spawn Parallel Agents
 
-Launch **exactly 4 Agent tool calls in a single message** (this triggers parallel execution). Each agent must:
+Launch **exactly N Agent tool calls in a single message** (where N is the resolved council size). This triggers parallel execution. Each agent must:
 - Receive the full perspective identity, methodology, and output structure from `perspectives.md`
 - Receive the user's question verbatim
 - Be instructed to follow their perspective's methodology step by step
@@ -74,35 +106,40 @@ INSTRUCTIONS:
 Be thorough but focused. Your analysis should be 300-600 words. Quality over quantity.
 ```
 
-**Critical:** All 4 Agent tool calls MUST be in a single message to execute in parallel. Use `description` like "PolyClaude: The Architect" for each.
+**Critical:** All N Agent tool calls MUST be in a single message to execute in parallel. Use `description` like "PolyClaude: The Architect" for each.
 
-## Step 5: Synthesize
+## Step 6: Synthesize
 
-After all 4 agents return their analyses, perform dialectical synthesis.
+After all agents return their analyses, perform dialectical synthesis.
 
 Read the synthesis methodology:
 @${CLAUDE_PLUGIN_ROOT}/skills/council/references/synthesis.md
 
-Follow the 7-step synthesis process:
-1. Map consensus (3+ perspectives agree)
-2. Identify tensions (2 perspectives disagree)
-3. Resolve or frame each tension
+Follow the 7-step synthesis process, adapting thresholds to the council size:
+1. Map consensus (use proportional thresholds — see synthesis.md)
+2. Identify tensions (2+ perspectives disagree)
+3. Resolve or frame each tension (prioritize the 2-3 most significant)
 4. Detect blind spots (what nobody addressed)
-5. Build confidence map (aggregate ratings)
+5. Build confidence map (aggregate ratings) — skip for `--quick` councils of 2
 6. Synthesize verdict (1-3 sentence bottom line)
 7. Order next steps (3-5 actionable items)
 
-## Step 6: Output the Council Report
+## Step 7: Output the Council Report
 
 Read the output format:
 @${CLAUDE_PLUGIN_ROOT}/skills/council/references/output-format.md
 
-Format your synthesis as a Council Report following the template exactly. Include the full individual perspective analyses in collapsible `<details>` sections at the bottom.
+Format your synthesis as a Council Report following the appropriate template:
+- **Quick (2 perspectives):** Use the compact format — Verdict, Agreement/Disagreement, Blind Spots, Next Steps
+- **Standard (3-6 perspectives):** Use the full format with all sections
+
+Include the full individual perspective analyses in collapsible `<details>` sections at the bottom.
 
 ## Important Notes
 
 - Do NOT editorialize between spawning agents and synthesizing. Let the perspectives speak, then synthesize.
 - Do NOT show raw agent output to the user. Only show the final Council Report.
-- If an agent fails or times out, proceed with 3 perspectives and note the gap: "The [X] perspective was unavailable for this analysis."
-- The synthesis is YOUR job as orchestrator. Do not spawn a 5th agent for synthesis.
+- If an agent fails or times out, proceed with remaining perspectives and note the gap: "The [X] perspective was unavailable for this analysis."
+- The synthesis is YOUR job as orchestrator. Do not spawn an additional agent for synthesis.
 - Be intellectually honest in synthesis — represent tensions faithfully, don't smooth them over.
+- At 5-6 perspectives, prioritize the 2-3 most significant tensions rather than cataloging every disagreement.

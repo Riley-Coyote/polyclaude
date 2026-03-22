@@ -2,16 +2,35 @@
 
 This is not summarization. This is synthesis — finding the signal in the noise, the tensions beneath the agreement, and the gaps nobody noticed.
 
+## Adapting to Council Size
+
+The synthesis process adapts based on how many perspectives participated:
+
+- **2 perspectives (quick):** Skip consensus thresholds. Report agreement or disagreement directly. Focus on the single most important tension and blind spots. No Confidence Map.
+- **3-4 perspectives (standard):** Full synthesis. Consensus = all or all-but-one agree. Tensions = any 2 perspectives meaningfully disagree.
+- **5-6 perspectives (full):** Full synthesis with proportional thresholds. Consensus = >60% agree. Prioritize the 2-3 most significant tensions rather than cataloging every disagreement.
+
 ## The 7-Step Synthesis Process
 
 ### Step 1: Map Consensus
-Identify findings where **3 or more perspectives agree**. These are your highest-confidence conclusions. State them clearly and concisely. Consensus doesn't mean certainty — note if the agreement is substantive ("we all analyzed this and reached the same conclusion") or superficial ("nobody challenged this assumption").
+Identify findings where a **strong majority of perspectives agree**.
+
+**Proportional thresholds:**
+- 2 perspectives: both agree
+- 3 perspectives: all 3 agree
+- 4 perspectives: 3+ agree
+- 5 perspectives: 3+ agree
+- 6 perspectives: 4+ agree (>60%)
+
+State consensus points clearly and concisely. Consensus doesn't mean certainty — note if the agreement is substantive ("we all analyzed this and reached the same conclusion") or superficial ("nobody challenged this assumption").
 
 ### Step 2: Identify Tensions
-Find where **exactly 2 perspectives meaningfully disagree**. For each tension:
+Find where **2 or more perspectives meaningfully disagree**. For each tension:
 - Name the underlying **values in conflict** (e.g., "speed vs. correctness", "simplicity vs. flexibility", "user experience vs. technical elegance")
 - State each side's argument with intellectual honesty — represent both positions as strongly as their advocates would
 - Do NOT immediately resolve — first ensure the tension is clearly understood
+
+**At 5-6 perspectives:** Many pairwise disagreements are possible. Focus on tensions that are **structurally important** — disagreements about core values or approach, not surface-level differences. Limit to the 2-3 most significant tensions.
 
 ### Step 3: Resolve or Frame Tensions
 For each tension identified in Step 2, determine:
@@ -30,9 +49,11 @@ This is the most valuable step. Review the original question and ask:
 Name these blind spots explicitly. A blind spot doesn't mean the analysis is wrong — it means there's unexplored territory that could change the recommendation.
 
 ### Step 5: Build Confidence Map
-For each major aspect of the question, aggregate the perspectives' confidence ratings:
-- **High confidence:** 3+ perspectives rated this area High, with no Low ratings
-- **Medium confidence:** Mixed ratings, or only 1-2 perspectives addressed this
+**Skip this step for 2-perspective (quick) councils.**
+
+For each major aspect of the question, aggregate the perspectives' confidence ratings using proportional logic:
+- **High confidence:** A strong majority rated this area High, with no Low ratings
+- **Medium confidence:** Mixed ratings, or only a minority of perspectives addressed this
 - **Low confidence:** Any perspective rated Low, or significant disagreement exists
 - **Unknown:** No perspective addressed this area (a blind spot)
 
@@ -60,3 +81,4 @@ Each step should be specific enough that someone could act on it immediately.
 - **False balance:** Not all perspectives are equally relevant to every question. Give more weight to the perspectives whose expertise is most applicable.
 - **Premature consensus:** Don't smooth over genuine disagreements. Tensions are information.
 - **Missing the meta-pattern:** Sometimes the most important insight is about the SHAPE of the disagreement, not its content. If the Architect and Pragmatist always disagree, that itself reveals something about the problem's nature.
+- **Tension overload (5-6 perspectives):** With more perspectives, resist the urge to catalog every disagreement. Surface the 2-3 tensions that actually matter for the decision at hand.

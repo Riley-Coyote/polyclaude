@@ -9,7 +9,7 @@
       "name": "polyclaude",
       "source": "./",
       "description": "Spawns parallel cognitive perspectives to analyze questions, plans, and ideas from multiple angles with structured dialectical synthesis.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Riley Coyote",
         "url": "https://github.com/Riley-Coyote"
