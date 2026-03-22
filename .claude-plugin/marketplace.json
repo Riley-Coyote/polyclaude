@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "polyclaude",
+  "description": "Multi-perspective council analysis plugin for Claude Code",
+  "owner": {
+    "name": "Riley Coyote",
+    "url": "https://github.com/Riley-Coyote"
+  },
+  "plugins": [
+    {
+      "name": "polyclaude",
+      "description": "Spawns parallel cognitive perspectives to analyze questions, plans, and ideas from multiple angles with structured dialectical synthesis.",
+      "author": {
+        "name": "Riley Coyote",
+        "url": "https://github.com/Riley-Coyote"
+      },
+      "source": ".",
+      "category": "productivity",
+      "homepage": "https://github.com/Riley-Coyote/polyclaude"
+    }
+  ]
+}

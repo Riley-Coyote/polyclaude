@@ -4,9 +4,10 @@
   "description": "Multi-perspective council analysis. Spawns parallel cognitive perspectives to analyze questions, plans, and ideas from multiple angles with structured dialectical synthesis.",
   "author": {
     "name": "Riley Coyote",
-    "url": "https://github.com/rileycoyote"
+    "url": "https://github.com/Riley-Coyote"
   },
-  "repository": "https://github.com/rileycoyote/polyclaude",
+  "homepage": "https://github.com/Riley-Coyote/polyclaude",
+  "repository": "https://github.com/Riley-Coyote/polyclaude",
   "license": "MIT",
   "keywords": [
     "multi-agent",
