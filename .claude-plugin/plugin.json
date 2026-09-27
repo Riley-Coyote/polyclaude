@@ -1,7 +1,7 @@
 {
   "name": "polyclaude",
-  "version": "0.2.0",
-  "description": "Multi-perspective council analysis. Spawns parallel cognitive perspectives to analyze questions, plans, and ideas from multiple angles with structured dialectical synthesis.",
+  "version": "0.3.0",
+  "description": "Multi-perspective council analysis. Built-in cognitive lenses, or an expert panel you name, analyze a question independently, cross-examine each other's arguments, and are synthesized into a decision report.",
   "author": {
     "name": "Riley Coyote",
     "url": "https://github.com/Riley-Coyote"
@@ -14,6 +14,8 @@
     "analysis",
     "perspectives",
     "council",
+    "expert-panel",
+    "debate",
     "synthesis",
     "dialectics",
     "decision-making"

@@ -1,19 +1,19 @@
-# Question Classification & Perspective Routing
+# Question Classification & Lens Selection
+
+Use this when the council is built from the six built-in lenses. For expert panels, see `expert-panels.md`.
 
 ## How to Classify
 
-Read the user's question and match it against the categories below. Use the **signal words** and **intent patterns** to determine the best fit. If the question spans multiple categories, choose the one that best captures the user's primary need. When uncertain, default to **General/Unknown**.
+Read the user's question and match it against the categories below, using the **signal words** and **intent patterns**. If the question spans several categories, choose the one that best captures the user's primary need. When uncertain, default to **General / Unknown**.
 
 ## Council Size
 
-The number of perspectives depends on the user's flags:
-
-| Flag | Council Size | Selection Method |
+| Flag | Members | Seated as |
 |---|---|---|
-| `--quick` | 2 | User Advocate + 1 most relevant |
-| *(default)* | 4 | User Advocate + 3 adaptive |
-| `--full` | 6 | All perspectives |
-| `--council N` | N (2-6) | User Advocate + (N-1) adaptive |
+| `--quick` | 2 | User Advocate + the top lens (independent round only) |
+| *(default)* | 4 | User Advocate + the top 3 |
+| `--full` | 6 | All six |
+| `--council N` | N (2–6) | User Advocate + the top N−1 |
 
 ## Classification Table
 
@@ -52,14 +52,14 @@ The number of perspectives depends on the user's flags:
 **Intent:** Broad analysis needed
 **Relevance order:** Architect > Skeptic > Pragmatist > Innovator > Temporal Analyst
 
-## Perspective Selection Algorithm
+## Selection Algorithm
 
-1. Classify the question to determine the relevance order
-2. Start with User Advocate (always included unless `--exclude advocate`)
-3. Fill remaining slots from the relevance order, top to bottom, until council size is reached
-4. Apply `--include` overrides: add named perspectives if not already selected (may push council size up to 6 max)
-5. Apply `--exclude` overrides: remove named perspectives from the council
-6. Ensure final council has at least 2 perspectives
+1. Classify the question to get its relevance order.
+2. Take `--exclude`d lenses out of consideration first, including `advocate` if it's named.
+3. Seat the User Advocate, unless it was excluded.
+4. Fill the remaining seats from the relevance order, top to bottom, until the council size is reached. Exclusions are already gone, so an excluded lens's seat passes to the next lens in line.
+5. Seat any `--include`d lenses that aren't already present. This can grow the council, up to 6.
+6. A lens that is both included and excluded stays out. If exclusions leave fewer lenses than seats, the council is simply smaller, but never fewer than 2.
 
 ### Examples
 
@@ -73,18 +73,10 @@ The number of perspectives depends on the user's flags:
 → Architecture. Full (6). Council: User Advocate + Architect + Skeptic + Pragmatist + Temporal Analyst + Innovator
 
 **`/polyclaude --include temporal Should we use Redis or Postgres?`**
-→ Architecture. Default (4) + forced include. Council: User Advocate + Architect + Skeptic + Pragmatist + Temporal Analyst (5 total)
+→ Architecture. Default (4) + forced include. Council: User Advocate + Architect + Skeptic + Pragmatist + Temporal Analyst (5)
 
 **`/polyclaude --exclude architect What's our mobile strategy?`**
-→ Strategy. Default (4) minus Architect. Council: User Advocate + Innovator + Temporal Analyst + Skeptic (4 total — next in relevance order fills the gap)
+→ Strategy. Default (4), Architect excluded. Council: User Advocate + Innovator + Temporal Analyst + Skeptic (4; the Skeptic takes the open seat)
 
-## Classification Output
-
-After resolving, state:
-
-```
-Question Type: [category]
-Council ([N] perspectives): [Perspective 1] + [Perspective 2] + ...
-```
-
-Then proceed to spawn the selected perspectives.
+**`/polyclaude --full --exclude pragmatist Should we pivot to enterprise?`**
+→ Strategy. Full (6), Pragmatist excluded. Council: User Advocate + Architect + Innovator + Temporal Analyst + Skeptic (5; only five lenses remain)
